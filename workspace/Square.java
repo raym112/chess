@@ -14,16 +14,16 @@ public class Square extends JComponent {
 	//a reference back to the board that stores this square.
     private Board b;
     
-    //true for white, false for black.
+    //true for white and false for black.
     private final boolean color;
-    //if there's a piece on the square this stores it. If there isn't this stores null.
+    //if a piece is on the square this stores it if there isn't then it stores null
     private Piece occupyingPiece;
     
-    //if desired you can use this to retain the piece where it is but make it invisible to the user. 
-    //True means to display the piece. This property will be switched to false when we are dragging a piece around while choosing our next move.
+   
+    //This  will be switched to false while  dragging a piece around
     private boolean dispPiece;
     
-    //the coordinates of the square.
+    // square coordinates
     private int row;
     private int col;
     
