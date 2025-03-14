@@ -1,18 +1,13 @@
-
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
-//you will need to implement two functions in this file.
 public class Piece {
-    private final boolean color;
+    private final boolean color; // true for white, false for black
     private BufferedImage img;
     
     public Piece(boolean isWhite, String img_file) {
@@ -22,13 +17,10 @@ public class Piece {
             if (this.img == null) {
               this.img = ImageIO.read(getClass().getResource(img_file));
             }
-          } catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("File not found: " + e.getMessage());
-          }
+        }
     }
-    
-    
-
     
     public boolean getColor() {
         return color;
@@ -45,22 +37,63 @@ public class Piece {
         g.drawImage(this.img, x, y, null);
     }
     
-    
     // TO BE IMPLEMENTED!
-    //return a list of every square that is "controlled" by this piece. A square is controlled
-    //if the piece capture into it legally.
+    // Return a list of every square that is "controlled" by this piece. A square is controlled
+    // if the piece can legally capture into it.
     public ArrayList<Square> getControlledSquares(Square[][] board, Square start) {
-     return null;
+        ArrayList<Square> controlledSquares = new ArrayList<>();
+        int row = start.getRow();
+        int col = start.getCol();
+        
+        // Check diagonals for controlled squares (for pawns or other pieces that can capture diagonally)
+        if (row + 1 < board.length && col - 1 >= 0) {
+            Square lowerLeft = board[row + 1][col - 1];
+            if (lowerLeft.isOccupied() && lowerLeft.getOccupyingPiece().getColor() != start.getOccupyingPiece().getColor()) {
+                controlledSquares.add(lowerLeft);
+            }
+        }
+        if (row + 1 < board.length && col + 1 < board[row].length) {
+            Square lowerRight = board[row + 1][col + 1];
+            if (lowerRight.isOccupied() && lowerRight.getOccupyingPiece().getColor() != start.getOccupyingPiece().getColor()) {
+                controlledSquares.add(lowerRight);
+            }
+        }
+        
+        return controlledSquares;
+    }
+
+    // Implement the move function here. Returns a list of legal moves for the piece.
+    public ArrayList<Square> getLegalMoves(Board b, Square start) {
+        ArrayList<Square> moves = new ArrayList<Square>();
+        int row = start.getRow();
+        int col = start.getCol();
+        
+        // Get traditional knight L-shaped moves
+        int[][] knightMoves = {
+            {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
+            {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
+        };
+
+        // Add all L-shaped knight moves
+        for (int[] move : knightMoves) {
+            int newRow = row + move[0];
+            int newCol = col + move[1];
+            
+            if (isValidMove(b, newRow, newCol)) {
+                moves.add(b.getSquareArray()[newRow][newCol]);
+            }
+        }
+        
+        return moves;
     }
     
-
-    //TO BE IMPLEMENTED!
-    //implement the move function here
-    //it's up to you how the piece moves, but at the very least the rules should be logical and it should never move off the board!
-    //returns an arraylist of squares which are legal to move to
-    //please note that your piece must have some sort of logic. Just being able to move to every square on the board is not
-    //going to score any points.
-    public ArrayList<Square> getLegalMoves(Board b, Square start){
-    	return null;
+    // Helper method to check if the new square is valid
+    private boolean isValidMove(Board b, int x, int y) {
+        // Ensure the move is within bounds of the board
+        if (x >= 0 && x < 8 && y >= 0 && y < 8) {
+            Square targetSquare = b.getSquareArray()[x][y];
+            return !targetSquare.isOccupied() || targetSquare.getOccupyingPiece().getColor() != this.color;
+        }
+        return false;
     }
 }
