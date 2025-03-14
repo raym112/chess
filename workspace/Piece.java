@@ -58,6 +58,18 @@ public class Piece {
                 controlledSquares.add(lowerRight);
             }
         }
+        if (row + 2 < board.length && col - 2 >= 0) {
+            Square lowerLeft = board[row + 2][col - 2];
+            if (lowerLeft.isOccupied() && lowerLeft.getOccupyingPiece().getColor() != start.getOccupyingPiece().getColor()) {
+                controlledSquares.add(lowerLeft);
+            }
+        }
+        if (row + 2 < board.length && col + 2 < board[row].length) {
+            Square lowerRight = board[row + 2][col + 2];
+            if (lowerRight.isOccupied() && lowerRight.getOccupyingPiece().getColor() != start.getOccupyingPiece().getColor()) {
+                controlledSquares.add(lowerRight);
+            }
+        }
         
         return controlledSquares;
     }
