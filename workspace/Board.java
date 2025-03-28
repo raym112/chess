@@ -1,3 +1,12 @@
+
+//Ray Mukoyama 
+
+//Bishop pawn 
+//Every pawn move as a Bishop and you play chess like that 
+
+
+
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
