@@ -136,39 +136,66 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
             currPiece = sq.getOccupyingPiece();
             fromMoveSquare = sq;
 
-            if ((currPiece.getColor() && !whiteTurn) || (!currPiece.getColor() && whiteTurn)) {
+            if ((currPiece.getColor() && !whiteTurn)) {
                 return;
             }
+                
+
+            
             sq.setDisplay(false);
+            if ((!currPiece.getColor() && whiteTurn)){
+                return;
+
         }
+    }
         repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Square endSquare = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
 
-        if (currPiece != null && fromMoveSquare != null && endSquare != null) {
-            ArrayList<Square> legalMoves = currPiece.getLegalMoves(this, fromMoveSquare);
-            if (legalMoves.contains(endSquare)) {
+        boolean a = false;
+
+        Square endSquare = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
+        Piece temp = endSquare.getOccupyingPiece();
+        if(currPiece != null && whiteTurn == currPiece.getColor()){
+
+
+// every move is a bishop
+        for(int i = 0; i < currPiece.getLegalMoves(this, fromMoveSquare).size(); i++){
+            if(endSquare == currPiece.getLegalMoves(this, fromMoveSquare).get(i)){
                 endSquare.put(currPiece);
                 fromMoveSquare.removePiece();
-                whiteTurn = !whiteTurn;
-            } else {
-                fromMoveSquare.put(currPiece);
+                a = true;
             }
         }
+        // if (a == false 
+        // || isInCheck(whiteTurn)
+        // ){
+        //    fromMoveSquare.put(currPiece);
+        //    endSquare.put(temp);
+        // }
+        // i think we need to move this bloc elsewhere
 
-        for (Square[] row : board) {
-            for (Square sq : row) {
-                sq.setBorder(null);
-            }
-        }
+        // using currPiece
 
-        fromMoveSquare.setDisplay(true);
+
+
+
         currPiece = null;
         repaint();
+        if(a){
+            whiteTurn = !whiteTurn;
+        }
     }
+    for(Square [] row: board){
+            for (Square s:row){
+                s.setBorder(null);
+            }
+        }
+    fromMoveSquare.setDisplay(true);
+    }
+    
 
     @Override
     public void mouseDragged(MouseEvent e) {
